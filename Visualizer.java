@@ -1,27 +1,27 @@
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Vector;
-
 public class Visualizer {
 
-    Draw canvas;
-    private final int WIDTH = 1000;
-    private final int HEIGHT = 300;
+    private final int WIDTH = 100;
+    private final int HEIGHT = 20;
     RingBuffer buffer = new RingBuffer(WIDTH);
 
     public Visualizer() {
-         canvas = new Draw();
-         canvas.setCanvasSize(WIDTH,HEIGHT);
-         canvas.setPenColor();
-         canvas.setPenRadius();
+        // Std draw is a static window which should be used only as a main window
+        // if new instruments were added then we could make them popup windows by creating
+        // new canvases by using the Draw class system (e.g. Draw canvas = new Draw())
+         StdDraw.setCanvasSize(WIDTH,HEIGHT);
+         StdDraw.setPenColor();
+         StdDraw.setPenRadius(.005);
+         StdDraw.enableDoubleBuffering();
+
     }
 
     public void draw(double sample) {
+        StdDraw.clear();
         buffer.dequeue();
         buffer.enqueue(sample);
-        for(int i = 0; i < buffer.size(); ++i) {
-            canvas.point(i * WIDTH/buffer.size(), buffer.get(i) * HEIGHT);
+        for(int i = 0; i < buffer.size(); i+=buffer.size()/1) {
+            StdDraw.point((double) i / buffer.size(), (double) buffer.get(i) + 0.5);
         }
-        System.out.println("something");
+        StdDraw.show();
     }
 }
