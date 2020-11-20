@@ -44,7 +44,6 @@ public class GuitarString {
         return samples;
     }
 
-
     // advances the Karplus-Strong simulation one time step
     // adds the average of the first two samples multiplied by the energy decay
     // factor (.994) in the ringbuffer and dequeues the first sample

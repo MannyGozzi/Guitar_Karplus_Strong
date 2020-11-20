@@ -1,3 +1,5 @@
+import javax.swing.*;
+
 /**
  * @author Manuel Gozzi
  * created on 2020/11/15
@@ -12,7 +14,15 @@ public class GuitarDriver {
         // Create two guitar strings, for concert A and C
         // octave 4
         Octave octave = new Octave();
-        Visualizer visualizer = new Visualizer();
+        Visualizer visualizer = new Visualizer(1000);
+        JFrame canvas = new JFrame();
+        canvas.setLocation(200,0);
+        StdDraw.setCanvasSize(200, 200);
+        canvas.setSize(1000, 300);
+        canvas.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        canvas.setVisible(true);
+        canvas.add(visualizer);
+
 
         // the main input loop
         while (true) {
@@ -35,9 +45,37 @@ public class GuitarDriver {
 
             // advance the simulation of each guitar string by one step
             octave.ticStrings();
-
-            visualizer.draw(sample);
+            visualizer.repaint();
+            visualizer.updateSample(sample);
         }
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
