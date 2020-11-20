@@ -1,24 +1,35 @@
 /**
  * @author Manuel Gozzi
  * created on 2020/11/15
+ *
+ * Simulates a guitar string using the Karplus Strong algorithm.
+ * The method takes the average of the first two values in a ring buffer
+ * multiplied by the decay factor and enqueues it into the cyclical ring
+ * buffer which decays and diffuses the sound. This creates a sound very
+ * similar to a guitar and has a performance of O(n) since the computation
+ * is linear.
  */
 
 public class GuitarString {
-    // YOUR INSTANCE VARIABLES HERE
+
     private RingBuffer samples;
     private final double SAMPLING_RATE = 44_100.0;
     private final double ENERGY_DECAY_FACTOR = .994;
-    private int ticCount;
+    private int ticCount; // note, never used
 
-    // creates a guitar string of the specified frequency,
-    // using sampling rate of 44,100
+    /**
+     *     Creates a guitar string of the specified frequency,
+     *     using a sampling rate of 44,100hz
+      */
     public GuitarString(double frequency) {
         samples = new RingBuffer((int) Math.ceil(SAMPLING_RATE / frequency));
         ticCount = 0;
     }
 
-    // creates a guitar string whose size and initial values are given by
-    // the specified array
+    /**
+     *     Creates a guitar string whose size and initial values are given by
+     *     the specified array
+      */
     public GuitarString(double[] init) {
         samples = new RingBuffer(init.length);
         for(double num : init) {
@@ -27,12 +38,10 @@ public class GuitarString {
         ticCount = 0;
     }
 
-    // returns the number of samples in the ring buffer
-    public int length() {
-        return ticCount;
-    }
-
-    // plucks the guitar string (by replacing the buffer with white noise)
+    /**
+     *  Plucks the guitar string (by replacing the buffer with white noise).
+     *  This is the start of the sound
+     */
     public void pluck() {
         samples.clear();
         while(!samples.isFull()) {
@@ -40,50 +49,25 @@ public class GuitarString {
         }
     }
 
-    public RingBuffer getSamples() {
-        return samples;
-    }
-
-    // advances the Karplus-Strong simulation one time step
-    // adds the average of the first two samples multiplied by the energy decay
-    // factor (.994) in the ringbuffer and dequeues the first sample
-    // this effectively acts as a lowpass filter while also dampening the sound
-    // as the virtual string vibrates across the medium
+    /**
+     * advances the Karplus-Strong simulation one time step
+     * adds the average of the first two samples multiplied by the energy decay
+     * factor (.994) to the ringbuffer and dequeues the first sample
+     * this effectively acts as a lowpass filter while also dampening the sound
+     * as the virtual string vibrates across the medium
+      */
     public void tic() {
         double firstSample = samples.dequeue();
         samples.enqueue((firstSample + samples.peek())/2 * ENERGY_DECAY_FACTOR);
         ++ticCount;
     }
 
-    // returns the current sample
+    /**
+     * @return The current sample from the string as a double
+     */
     public double sample() {
         if(!samples.isEmpty()) return samples.peek();
         return 0.0;
-    }
-
-    public int getSize() {
-        return samples.size();
-    }
-
-
-    // tests and calls every constructor and instance method in this class
-    public static void main(String[] args) {
-        double[] samples = {1.0, 2.0, 3.0, 4.0, 5.0};
-        GuitarString string = new GuitarString(samples);
-        System.out.println(string.getSamples());
-        string.tic();
-        System.out.println(string.getSamples());
-        string.tic();
-        System.out.println(string.getSamples());
-        string.tic();
-        System.out.println(string.getSamples());
-        string.tic();
-        System.out.println(string.getSamples());
-        string.tic();
-        System.out.println(string.getSamples());
-        string.tic();
-        System.out.println(string.getSamples());
-
     }
 
 }

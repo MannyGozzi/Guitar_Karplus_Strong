@@ -1,6 +1,16 @@
 /**
  * @author Manuel Gozzi
  * created on 2020/11/15
+ *
+ * This RingBuffer holds an array of doubles
+ * Elements are added in a ring formation and
+ * when elements are dequeued new elements will
+ * take their place. The first element of the
+ * ring buffer doesn't necessarily start at 0.
+ * This creates a highly efficient data structure
+ * for rapidly altering data that maintains its inital size.
+ * This class could be defined as a generic however it would
+ * require compiler flags which are unecessary for this project.
  */
 
 public class RingBuffer {
@@ -90,30 +100,6 @@ public class RingBuffer {
             str = str + " " + num;
         }
         return str;
-    }
-
-    // tests and calls every instance method in this class
-    public static void main(String[] args) {
-        RingBuffer test = new RingBuffer(5);
-        test.enqueue(1.0);
-        test.enqueue(2.0);
-        test.enqueue(3.0);
-        test.enqueue(4.0);
-        test.enqueue(5.0);
-        test.dequeue();
-        test.enqueue(5.0);
-        test.dequeue();
-        test.enqueue(5.0);
-        test.dequeue();
-        test.enqueue(5.0);
-        test.dequeue();
-        test.enqueue(5.0);
-        test.dequeue();
-        test.enqueue(5.0);
-        test.dequeue();
-        test.enqueue(5.0);
-        test.dequeue();
-        test.enqueue(5.0);
     }
 
 }

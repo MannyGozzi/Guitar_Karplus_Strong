@@ -1,8 +1,13 @@
-import javax.swing.*;
+import com.sun.java.swing.plaf.windows.WindowsDesktopPaneUI;
 
 /**
  * @author Manuel Gozzi
  * created on 2020/11/15
+ *
+ * A simple project that implements the Karplus Strong string algorithm.
+ * Simply run the program and make something that sounds epic.
+ * Note that you must click on the empty window in order to make music
+ * since it needs window focus in order to capture the keys.
  *
  * stdlib.jar imported from https://introcs.cs.princeton.edu/java/stdlib/
  */
@@ -10,42 +15,37 @@ import javax.swing.*;
 public class GuitarDriver {
 
     public static void main(String[] args) {
-
-        // Create two guitar strings, for concert A and C
-        // octave 4
-        Octave octave = new Octave();
-        Visualizer visualizer = new Visualizer(1000);
-        JFrame canvas = new JFrame();
-        canvas.setLocation(200,0);
-        StdDraw.setCanvasSize(200, 200);
-        canvas.setSize(1000, 300);
-        canvas.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        canvas.setVisible(true);
-        canvas.add(visualizer);
-
+        int WIDTH = 1000;
+        int HEIGHT = 300;
+        Keys keys = new Keys();
+        Visualizer visualizer = new Visualizer(WIDTH);
+        MusicCanvas musicCanvas = new MusicCanvas(WIDTH,HEIGHT, 200, 0);
+        musicCanvas.add(visualizer); // adds the visualizer to the music canvas window
+        StdDraw.setCanvasSize(200, 200); // sets the size of the key capture window
 
         // the main input loop
         while (true) {
 
             // check if the user has typed a key, and, if so, process it
             if (StdDraw.hasNextKeyTyped()) {
- 
-                // the user types this character
+
+                // collect the typed key
                 char key = StdDraw.nextKeyTyped();
 
                 // pluck the corresponding string
-                octave.pluckStrings(key);
+                keys.pluckStrings(key);
             }
 
-            // compute the superposition of the samples
-            double sample = octave.sampleStrings();
+            // compute string samples
+            double sample = keys.sampleStrings();
 
             // send the result to standard audio
             StdAudio.play(sample);
 
             // advance the simulation of each guitar string by one step
-            octave.ticStrings();
-            visualizer.repaint();
+            keys.ticStrings();
+
+            // send the sample to the visualizer to update the waveform
             visualizer.updateSample(sample);
         }
     }

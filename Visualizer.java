@@ -33,13 +33,17 @@ public class Visualizer extends JPanel {
         );
         g2D.setRenderingHints(hints);
         g2D.setStroke(new BasicStroke(3.0f));                     // sets the stroke to be thicker
-
         g2D.setColor(Color.CYAN);
+
+        // draws the waveform formed by the samples collected by the strings
         for(int i = 0; i < buffer.size() - 1; i++) {
            g2D.drawLine(i, (int) Math.ceil(buffer.get(i) * HEIGHT) + HEIGHT/2, i + 1, (int) Math.ceil(buffer.get(i + 1) * HEIGHT) + HEIGHT/2);
         }
     }
 
+    /**
+     *  updates the visualizer to have the newest sample in its waveform
+     */
     public void updateSample(double sample) {
         buffer.dequeue();
         buffer.enqueue(sample);
